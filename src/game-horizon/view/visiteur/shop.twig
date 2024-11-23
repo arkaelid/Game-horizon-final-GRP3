@@ -58,7 +58,7 @@
                     <div class="game-card-content">
                         <h3>{{ NEWgame.nom_jeu }}</h3>
                         <p class="tags"> Tags: {{ NEWgame.categories }} | {{ NEWgame.libelle_genre }} </p>
-                        <p class="types"> Jouabilité: {{ NEWgame.types }} </p>
+                        <p class="types"> Date de sortie: {{ NEWgame.date_sortie  }}</p>
                         <p class="price">
                             {% if NEWgame.prix_final is defined and NEWgame.prix_final != NEWgame.prix %}
                                 <span class="original-price">{{ NEWgame.prix }}€</span>
@@ -95,7 +95,7 @@
                     <div class="game-card-content">
                         <h3>{{ UCgame.nom_jeu }}</h3>
                         <p class="tags"> Tags: {{ UCgame.categories }} | {{ UCgame.libelle_genre }} </p>
-                        <p class="types"> Jouabilité: {{ UCgame.types }} </p>
+                        <p class="types"> Date de sortie: {{ UCgame.date_sortie  }} </p>
                         <p class="price">
                             {% if UCgame.prix_final is defined and UCgame.prix_final != UCgame.prix %}
                                 <span class="original-price">{{ UCgame.prix }}€</span>
@@ -125,7 +125,7 @@
                 <div class="game-card-content">
                     <h3>{{ game.nom_jeu }}</h3>
                     <p class="tags"> Tags: {{ game.categories }} | {{ game.libelle_genre }} </p>
-                    <p class="types"> Jouabilité: {{ game.types }} </p>
+                    <p class="types"> Date de sortie: {{ game.date_sortie  }} </p>
                     <p class="price">
                         {% if game.prix_final is defined and game.prix_final != game.prix %}
                             <span class="original-price">{{ game.prix }}€</span>

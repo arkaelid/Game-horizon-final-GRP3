@@ -797,7 +797,7 @@ nav {
 
 
 .login-container {
-    max-width: 400px;
+    width: 400px;
     margin: 2rem auto;
     padding: 2rem;
     background: #24262A;
@@ -1096,6 +1096,14 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.confirmation-message p, .game-info h4, .price span, .total-price p{
+    color: #fff;
+}
+
+.confirmation-details h3 {
+    color: #4CAF50;
 }
 
 

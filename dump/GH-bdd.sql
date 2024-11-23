@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : db
--- Généré le : sam. 23 nov. 2024 à 15:04
+-- Généré le : sam. 23 nov. 2024 à 16:40
 -- Version du serveur : 11.5.2-MariaDB-ubu2404
--- Version de PHP : 8.2.26
+-- Version de PHP : 8.2.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -57,7 +57,8 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`login`, `password`) VALUES
-('admin', '*3A06800F08E81E5076F75BE591641EBA964F34C3');
+('admin', '*3A06800F08E81E5076F75BE591641EBA964F34C3'),
+('Admin_X9fTq7L3', '*0EB87653AF8C4EF1236885FEF2D5BFEC52304351');
 
 -- --------------------------------------------------------
 
@@ -178,7 +179,8 @@ INSERT INTO `commande` (`id_transaction`, `date_heure_transaction`, `total_trans
 (23, '2024-11-23 00:06:44', 29.99, NULL, NULL, 11, 'Cb'),
 (24, '2024-11-23 00:14:11', 9.99, NULL, NULL, 11, 'Cb'),
 (25, '2024-11-23 01:33:40', 29.99, 'Terminée', NULL, 11, 'Cb'),
-(26, '2024-11-23 15:00:01', 49.99, 'Terminée', NULL, 11, 'Cb');
+(26, '2024-11-23 15:00:01', 49.99, 'Terminée', NULL, 11, 'Cb'),
+(27, '2024-11-23 16:17:34', 35.00, 'Terminée', NULL, 13, 'Paypal');
 
 -- --------------------------------------------------------
 
@@ -228,6 +230,7 @@ INSERT INTO `contenir` (`id_jeu`, `id_transaction`, `prix`) VALUES
 (5, 2, 69.99),
 (5, 20, 35.00),
 (5, 21, 35.00),
+(5, 27, 35.00),
 (6, 6, 29.99),
 (6, 25, 29.99),
 (7, 1, 29.99),
@@ -444,6 +447,132 @@ CREATE TABLE `media` (
   `id_jeu` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Déchargement des données de la table `media`
+--
+
+INSERT INTO `media` (`id_media`, `chemin_media`, `id_dlc`, `id_jeu`) VALUES
+(1, 'https://www.youtube.com/embed/8X2kIfS6fb8?si=p9udnMLr7YLaKCtM', NULL, 1),
+(2, 'https://www.youtube.com/embed/UnA7tepsc7s?si=GHxTm1FiT25Y43CD', NULL, 1),
+(3, 'cbpk-img1.jpg', NULL, 1),
+(4, 'cbpk-img2.jpg', NULL, 1),
+(5, 'cbpk-img3.jpg', NULL, 1),
+(6, 'cbpk-img4.jpg', NULL, 1),
+(7, 'cbpk-img5.jpg', NULL, 1),
+(8, 'cbpk-img6.jpg', NULL, 1),
+(9, 'cbpk-img7.jpg', NULL, 1),
+(10, 'cbpk-img8.jpg', NULL, 1),
+(11, 'cbpk-img9.jpg', NULL, 1),
+(12, 'cbpk-img10.jpg', NULL, 1),
+(13, 'https://www.youtube.com/embed/JSRtYpNRoN0?si=QiAS_hTAwC4RrmaR', NULL, 2),
+(14, 'https://www.youtube.com/embed/LSPuJ9ggVcA?si=o1X2OyZPo4qQ4ZFk', NULL, 2),
+(15, 'skyrim-img1.jpg', NULL, 2),
+(16, 'skyrim-img2.jpg', NULL, 2),
+(17, 'skyrim-img3.jpg', NULL, 2),
+(18, 'skyrim-img4.jpg', NULL, 2),
+(19, 'skyrim-img5.jpg', NULL, 2),
+(20, 'skyrim-img6.jpg', NULL, 2),
+(21, 'skyrim-img7.jpg', NULL, 2),
+(22, 'skyrim-img8.jpg', NULL, 2),
+(23, 'https://www.youtube.com/embed/IMZARZ8DE8I?si=b2Xfs7unvH44gtmo', NULL, 3),
+(24, 'https://www.youtube.com/embed/9jcbZDpOs4s?si=_N2_woQNnQQdct9Q', NULL, 3),
+(25, 'DBSZ-img1.jpg', NULL, 3),
+(26, 'DBSZ-img2.jpg', NULL, 3),
+(27, 'DBSZ-img3.jpg', NULL, 3),
+(28, 'DBSZ-img4.jpg', NULL, 3),
+(29, 'DBSZ-img5.jpg', NULL, 3),
+(30, 'DBSZ-img6.jpg', NULL, 3),
+(31, 'DBSZ-img7.jpg', NULL, 3),
+(32, 'https://www.youtube.com/embed/4qBkw4YwGrM?si=5Mia9NKouZwbPjdk', NULL, 4),
+(33, 'Halo_MCC-img1.jpg', NULL, 4),
+(34, 'Halo_MCC-img2.jpg', NULL, 4),
+(35, 'Halo_MCC-img3.jpg', NULL, 4),
+(36, 'Halo_MCC-img4.jpg', NULL, 4),
+(37, 'Halo_MCC-img5.jpg', NULL, 4),
+(38, 'Halo_MCC-img6.jpg', NULL, 4),
+(39, 'Halo_MCC-img7.jpg', NULL, 4),
+(40, 'Halo_MCC-img8.jpg', NULL, 4),
+(41, 'Halo_MCC-img9.jpg', NULL, 4),
+(42, 'Halo_MCC-img10.jpg', NULL, 4),
+(43, 'Halo_MCC-img11.jpg', NULL, 4),
+(44, 'Halo_MCC-img12.jpg', NULL, 4),
+(45, 'Halo_MCC-img13.jpg', NULL, 4),
+(46, 'Halo_MCC-img14.jpg', NULL, 4),
+(47, 'Halo_MCC-img15.jpg', NULL, 4),
+(48, 'https://www.youtube.com/embed/h0uxvKUjsj4?si=YRWT0Br2XrHTODWg', NULL, 5),
+(49, 'https://www.youtube.com/embed/GYG_h-L-K2E?si=eXp1dTJqvt7-0npW', NULL, 5),
+(50, 'BO6-img1.jpg', NULL, 5),
+(51, 'BO6-img2.jpg', NULL, 5),
+(52, 'BO6-img3.jpg', NULL, 5),
+(53, 'BO6-img4.jpg', NULL, 5),
+(54, 'BO6-img5.jpg', NULL, 5),
+(55, 'BO6-img6.jpg', NULL, 5),
+(56, 'BO6-img7.jpg', NULL, 5),
+(57, 'BO6-img8.jpg', NULL, 5),
+(58, 'BO6-img9.jpg', NULL, 5),
+(59, 'BO6-img10.jpg', NULL, 5),
+(60, 'https://www.youtube.com/embed/ktw2k3m7Qko?si=cOLmBUMVQTkPB4fG', NULL, 6),
+(61, 'https://www.youtube.com/embed/2ISYN1AshZY?si=fJNmUZbKL5kIus8e', NULL, 6),
+(62, 'titan-img1.jpg', NULL, 6),
+(63, 'titan-img2.jpg', NULL, 6),
+(64, 'titan-img3.jpg', NULL, 6),
+(65, 'titan-img4.jpg', NULL, 6),
+(66, 'titan-img5.jpg', NULL, 6),
+(67, 'https://www.youtube.com/embed/QkkoHAzjnUs?si=eSUAcrQG05vrRuXD', NULL, 7),
+(68, 'https://www.youtube.com/embed/hvoD7ehZPcM?si=aaPt7YhZuftGS8rB', NULL, 7),
+(69, 'GTA5-img1.jpg', NULL, 7),
+(70, 'GTA5-img2.jpg', NULL, 7),
+(71, 'GTA5-img3.jpg', NULL, 7),
+(72, 'GTA5-img4.jpg', NULL, 7),
+(73, 'GTA5-img5.jpg', NULL, 7),
+(74, 'GTA5-img6.jpg', NULL, 7),
+(75, 'GTA5-img7.jpg', NULL, 7),
+(76, 'GTA5-img8.jpg', NULL, 7),
+(77, 'GTA5-img.9jpg', NULL, 7),
+(78, 'GTA5-img10.jpg', NULL, 7),
+(79, 'GTA5-img11.jpg', NULL, 7),
+(80, 'GTA5-img12.jpg', NULL, 7),
+(81, 'https://www.youtube.com/embed/1Hojv0m3TqA?si=CxQUy0UDVCJg9kxa', NULL, 8),
+(82, '/img/undertale-img1.jpg', NULL, 8),
+(83, '/img/undertale-img2.jpg', NULL, 8),
+(84, '/img/undertale-img3.jpg', NULL, 8),
+(85, '/img/undertale-img4.jpg', NULL, 8),
+(86, '/img/undertale-img5.jpg', NULL, 8),
+(87, '/img/undertale-img6.jpg', NULL, 8),
+(88, '/img/undertale-img7.jpg', NULL, 8),
+(89, 'https://www.youtube.com/embed/Z6_C2ppkdVc?si=iWo0huRPxrGRu9g7', NULL, 9),
+(90, '/img/isaac-img1.jpg', NULL, 9),
+(91, '/img/isaac-img2.jpg', NULL, 9),
+(92, '/img/isaac-img3.jpg', NULL, 9),
+(93, '/img/isaac-img4.jpg', NULL, 9),
+(94, '/img/isaac-img5.jpg', NULL, 9),
+(95, '/img/isaac-img6.jpg', NULL, 9),
+(96, '/img/isaac-img7.jpg', NULL, 9),
+(97, '/img/isaac-img8.jpg', NULL, 9),
+(98, '/img/isaac-img9.jpg', NULL, 9),
+(99, '/img/isaac-img10.jpg', NULL, 9),
+(100, '/img/isaac-img11.jpg', NULL, 9),
+(101, '/img/isaac-img12.jpg', NULL, 9),
+(102, 'https://www.youtube.com/embed/S9STizATKjE?si=9BorWzygjy_j48Gu', NULL, 10),
+(103, 'https://www.youtube.com/embed/oD3pxbG9YYI?si=KnZ_kspYyY6ALArc', NULL, 10),
+(104, '/img/hell-img1.jpg', NULL, 10),
+(105, '/img/hell-img2.jpg', NULL, 10),
+(106, '/img/hell-img3.jpg', NULL, 10),
+(107, '/img/hell-img4.jpg', NULL, 10),
+(108, '/img/hell-img5.jpg', NULL, 10),
+(109, '/img/hell-img6.jpg', NULL, 10),
+(110, '/img/hell-img7.jpg', NULL, 10),
+(111, '/img/hell-img8.jpg', NULL, 10),
+(112, '/img/hell-img9.jpg', NULL, 10),
+(113, '/img/hell-img10.jpg', NULL, 10),
+(114, '/img/hell-img11.jpg', NULL, 10),
+(115, '/img/hell-img12.jpg', NULL, 10),
+(116, 'https://www.youtube.com/embed/Su6OsTb1w9Q?si=14SyOeqNpjrFvp0X', NULL, 11),
+(117, '/img/lethal-img1.jpg', NULL, 11),
+(118, '/img/lethal-img2.jpg', NULL, 11),
+(119, '/img/lethal-img3.jpg', NULL, 11),
+(120, '/img/lethal-img4.jpg', NULL, 11);
+
 -- --------------------------------------------------------
 
 --
@@ -487,7 +616,8 @@ CREATE TABLE `posseder` (
 
 INSERT INTO `posseder` (`id_utilisateur`, `id_jeu`, `statut`, `favoris`, `date_acquisition`, `date_achat`) VALUES
 (11, 2, NULL, NULL, NULL, '2024-11-23 15:00:01'),
-(11, 3, NULL, NULL, NULL, '2024-11-22 23:52:42');
+(11, 3, NULL, NULL, NULL, '2024-11-22 23:52:42'),
+(13, 5, NULL, NULL, NULL, '2024-11-23 16:17:34');
 
 -- --------------------------------------------------------
 
@@ -668,7 +798,8 @@ INSERT INTO `utilisateur` (`id_utilisateur`, `pseudo_utilisateur`, `mail`, `pass
 (9, 'EmmaGames', NULL, NULL, NULL),
 (10, 'MaxGaming', NULL, NULL, NULL),
 (11, 'sully', 'sully@mail.fr', '$argon2id$v=19$m=65536,t=4,p=1$emY4S3Jpd2JwckxsYWFDMg$Oo3XSYtrRQbxPNWKu3/EG9i5+GMmACPO5gCcKazrVLc', '/img/utilisateurs/user.png'),
-(12, 'sully2', 'sully2@mail.fr', '$argon2id$v=19$m=65536,t=4,p=1$ZFE1cG5QQ3YyVXpyTUt1WA$jYifyzC2nZM8HQ9n6vFigeKUiJjK4pWuyHSDBgPYZrU', '/img/utilisateurs/user.png');
+(12, 'sully2', 'sully2@mail.fr', '$argon2id$v=19$m=65536,t=4,p=1$ZFE1cG5QQ3YyVXpyTUt1WA$jYifyzC2nZM8HQ9n6vFigeKUiJjK4pWuyHSDBgPYZrU', '/img/utilisateurs/user.png'),
+(13, 'laurent-gaming41', 'laurent-g@business.com', '$argon2id$v=19$m=65536,t=4,p=1$UjlIb241dDJFcXZWSmhmWA$wGrrNDBqvKJGD1Ef1Zq8wVi0TiQD41x/gzSpJFtlMLA', '/img/utilisateurs/user.png');
 
 -- --------------------------------------------------------
 
@@ -906,7 +1037,7 @@ ALTER TABLE `categorie`
 -- AUTO_INCREMENT pour la table `commande`
 --
 ALTER TABLE `commande`
-  MODIFY `id_transaction` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id_transaction` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT pour la table `controlleur`
@@ -942,7 +1073,7 @@ ALTER TABLE `jeu`
 -- AUTO_INCREMENT pour la table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id_media` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_media` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT pour la table `notif`
@@ -972,7 +1103,7 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_utilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_utilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Contraintes pour les tables déchargées

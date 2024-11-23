@@ -2,7 +2,7 @@
 
 {% block content %}
 <main class="content" id="content">
-    <div class="register-container">
+    <div class="login-container">
         <h1>Inscription</h1>
         
         {% if error is defined %}
@@ -11,7 +11,7 @@
             </div>
         {% endif %}
         
-        <form action="/register" method="POST" class="register-form">
+        <form action="/register" method="POST" class="login-form">
             <div class="form-group">
                 <label for="login">Nom d'utilisateur</label>
                 <input type="text" id="pseudo_utilisateur" name="pseudo_utilisateur" required>
@@ -32,10 +32,10 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
             </div>
             
-            <button type="submit" class="btn-register">S'inscrire</button>
+            <button type="submit" class="btn-login">S'inscrire</button>
         </form>
         
-        <div class="register-footer">
+        <div class="login-footer">
             <p>Déjà inscrit ? <a href="/loginvisiteur">Se connecter</a></p>
         </div>
     </div>
