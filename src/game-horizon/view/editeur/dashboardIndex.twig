@@ -1,0 +1,12 @@
+{% extends "/editeur/layoutEditeur.twig" %}
+{% block content %}
+
+        <h2>{{ session.nom_societe }}</h2>
+            {% include 'components/cardEditeur.twig' with {'card_link': "/votreprofilediteur",'card_title':"Votre profil",'card_text':"Visualiser et Modifier certain paramètres de votre profil"} %}
+                {% include 'components/cardEditeur.twig' with {'card_link': "/jeuxenligne",'card_title':"Vos jeux en ligne",'card_text':"Visualiser vos jeux en ligne"} %}
+                                {% include 'components/cardEditeur.twig' with {'card_link': "/jeuxenattente",'card_title':"Vos jeux en Attente",'card_text':"Visualiser vos jeux en Attente de Validation"} %}
+                                {% include 'components/cardEditeur.twig' with {'card_link': "/soumettrejeu",'card_title':"Soumettre un jeu",'card_text':"Soumettez un jeu a l'administrateur"} %}
+                                                                {% include 'components/cardEditeur.twig' with {'card_link': "/nn",'card_title':"Notification",'card_text':"Regardez vos dernière notification"} %}
+                                
+
+{% endblock %}

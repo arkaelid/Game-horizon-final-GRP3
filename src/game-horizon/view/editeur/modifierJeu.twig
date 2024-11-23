@@ -1,0 +1,39 @@
+{% extends "/editeur/layoutEditeur.twig" %}
+ 
+{% block content %}
+
+<form action="/updatejeu" method="POST" enctype="multipart/form-data">
+    <div>
+        <label for="nomJeu">Nom du jeu :</label>
+        <input type="text" id="nomJeu" name="nomJeu" value="{{jeu.nom_jeu}}" required>
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="prix">Prix :</label>
+        <input type="text" id="prix" name="prix" value="{{jeu.prix}}" required>
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="resume">Résumé :</label>
+        <textarea id="resume" name="resume" required>
+        {{jeu.resume}}
+        </textarea>
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="dateSortie">Date de sortie :</label>
+        <input type="date" id="dateSortie" name="dateSortie" value="{{jeu.date_sortie}}" required>
+    </div>
+<br/>
+        <input type="hidden" id="idJeu" name="idJeu" value="{{jeu.id_jeu}}" required>
+
+<br/>
+
+    <button class="btn-green" type="submit">Modifier le jeu</button>
+</form>
+{% endblock %}
+
+

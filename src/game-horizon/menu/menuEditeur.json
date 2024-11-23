@@ -1,0 +1,25 @@
+
+    [
+
+        {
+            "name": "Dashboard Principal",
+            "url": "/dashboardediteur"
+        },
+        {
+            "name": "Vos jeux en ligne",
+            "url": "/jeuxenligne"
+        },
+
+        {
+            "name": "Vos jeux en Attente de validation",
+            "url": "/jeuxenattente"
+        },
+
+        {
+            "name": "Ajouter des promotions",
+            "url": "/ajouterpromotion"
+        }
+   
+
+        
+    ]

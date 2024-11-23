@@ -1,0 +1,31 @@
+{% extends "/editeur/layoutEditeur.twig" %}
+
+
+{% block content %}
+
+
+
+    <form method="POST" action="/promotionajout">
+    <h3>Ajouter une promotion</h3>
+    
+    <label for="jeux_ids">Sélectionner les jeux :</label>
+    <select id="jeux_ids" name="jeux_ids[]" multiple required>
+        {% for jeu in jeux %}
+            <option value="{{ jeu.id_jeu }}">{{ jeu.nom_jeu }}</option>
+        {% endfor %}
+    </select>
+    
+    <label for="reduction">Pourcentage de réduction :</label>
+    <input type="number" id="reduction" name="reduction" min="1" max="100" placeholder="Ex : 20" required>
+    
+    <label for="date_debut">Date de début :</label>
+    <input type="date" id="date_debut" name="date_debut" required>
+    
+    <label for="date_fin">Date de fin :</label>
+    <input type="date" id="date_fin" name="date_fin" required>
+
+    <button type="submit">Ajouter des promotions</button>
+</form>
+
+
+{% endblock %}

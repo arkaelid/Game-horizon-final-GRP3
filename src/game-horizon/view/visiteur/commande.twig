@@ -1,0 +1,82 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content" id="content">
+    <h2 class="commande-title">Passer la commande</h2>
+    <div class="ligne-commande">
+        {% for game in games %}
+            <hr>
+                <div class="info-ligne">
+                    <img src="/img/{{ game.image_card }}" alt="{{ game.nom_jeu }}">
+                    <div class="game-title">
+                        <h3>{{ game.nom_jeu }}</h3>
+                    </div>
+                    
+                    <div class="game-tags">
+                        <p>Tags: {{ game.categories }} | {{ game.libelle_genre }}</p>
+                    </div>
+                    
+                    <div class="game-date">
+                        <p> Date de sortie: {{ game.date_sortie }}</p>
+                    </div>
+                    
+                    <div class="game-price">
+                        {% if game.reduction %}
+                            <p>
+                                <span class="original-price">{{ game.prix }}€</span>
+                                <span class="discounted-price">{{ game.prix_final }}€</span>
+                                <span class="discount-badge">-{{ game.reduction }}%</span>
+                            </p>
+                        {% else %}
+                            <p>{{ game.prix }}€</p>
+                        {% endif %}
+                    </div>
+                </div>
+        {% endfor %}
+        <hr>
+    </div>
+
+    <div class="infos-commande">
+        <p class="label-total">Prix total de la commande :</p>
+        <p class="game-total"> {{ total }} €</p>
+        <form method="post" action="/commande">
+            <div class="moyenPaiement">
+                <select name="choixPaiement" id="choix-paiement">
+                    <option value="">Choisissez un moyen de paiment</option>
+                    <option value="Cb">Carte Bancaire</option>
+                    <option value="Paypal">Paypal</option>
+                    <option value="Visa">Visa</option>
+                    <option value="MasterCard">MasterCard</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-test" id="btn-validCommande"> Valider la commande </button>
+        </form>
+        <a href="/panier" class="btn-test" id="btn-retourPanier">Retour au panier</a>
+    </div>
+</main>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.discounted-price {
+    color: #e63946;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.discount-badge {
+    background-color: #e63946;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+</style>
+{% endblock %}

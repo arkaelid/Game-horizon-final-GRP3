@@ -1,0 +1,119 @@
+{% extends "/admin/layoutAdmin.twig" %}
+{% block body_class %}edit-editeur-page{% endblock %}
+{% block content %}
+<div class="category-content">
+    <h1>Catégories de jeu</h1>
+    
+    {# Messages d'alerte #}
+    {% if success %}
+        <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+    
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    
+    <div class="tables-container">
+        <div class="table-wrapper">
+            <h2>Liste des catégories</h2>
+            <input type="text" id="searchCategory" placeholder="Rechercher une catégorie..">
+            <div class="table-container">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom de la catégorie</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td>{{ category.id_categorie }}</td>
+                                <td>{{ category.libelle_categorie }}</td>
+                                <td>
+                                    <a class="btn btn-primary" href="/category/edit/{{ category.id_categorie }}">Modifier</a>
+                                    <button type="button" onclick="confirmDelete({{ category.id_categorie }})" class="btn btn-danger">Supprimer</button>
+                                    <form id="deleteForm{{ category.id_categorie }}" action="/category/delete/{{ category.id_categorie }}" method="POST" style="display:none;"></form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="button-container">
+                <a href="/category/add" class="btn btn-primary">Ajouter une catégorie</a> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.fade-out {
+    opacity: 0;
+}
+</style>
+
+<script>
+function confirmDelete(categoryId) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible.')) {
+        document.getElementById('deleteForm' + categoryId).submit();
+    }
+}
+
+// Fonction pour faire disparaître les alertes
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.remove();
+            }, 500); // Temps de l'animation de fade-out
+        }, 4000); // Délai avant le début du fade-out (4 secondes)
+    });
+});
+</script>
+{% endblock %}

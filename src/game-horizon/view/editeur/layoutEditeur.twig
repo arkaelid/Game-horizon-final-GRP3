@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css"/>
+
+    </head>
+<body>
+<header>
+    {{h1_title}}
+</header>
+    <div class="content">
+        <nav class="sidebar" id="sidebar">
+        
+                <div class="burger-icon" id="burger">
+            <img  src="/img/logo-Game_Horizon.png" alt="burger" class="ptiteImg">
+            <img src="/img/{{session.chemin_img_editeur}}" class="ptiteImg">
+            <ul>
+                {% for item in menus %}
+                    {% include 'components/menu_item.twig' %}
+                {% else %}
+                No menu have been found.
+                {% endfor %}
+            </ul>
+             <form action="/logoutediteur" method="POST">
+            <button type="submit">Se Déconnecter</button>
+        </form>
+        </nav>
+ 
+        <main class="main-content">
+            {% block content %} {% endblock %}
+        </main>
+    </div>
+<footer>
+    {{footer}}
+</footer>
+
+ 
+ 
+</body>
+</html>

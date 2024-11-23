@@ -1,0 +1,146 @@
+{% extends "/editeur/layoutEditeur.twig" %}
+ 
+{% block content %}
+
+<form action="/soumettre" method="POST" enctype="multipart/form-data">
+
+
+<div>
+        <label for="typeJeu">Type de jeu :</label>
+        <select id="typeJeu" name="typeJeu" required>
+            <option value="">Sélectionnez le type</option>
+            <option value="principal">Jeu Principal</option>
+            <option value="dlc">DLC</option>
+        </select>
+    </div>
+    <br/>
+    <br/>
+    
+    <!-- Jeu parent (si DLC) -->
+    <div>
+        <label for="idJeuParent">Jeu Parent (si DLC) :</label>
+        <select id="idJeuParent" name="idJeuParent">
+            <option value="">Sélectionnez un jeu parent</option>
+            {% for jeu in jeux %}
+                <option value="{{ jeu.id_jeu }}">{{ jeu.nom_jeu }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <br/>
+    <br/>
+    
+    <div>
+        <label for="nomJeu">Nom du jeu :</label>
+        <input type="text" id="nomJeu" name="nomJeu" required>
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="prix">Prix :</label>
+        <input type="text" id="prix" name="prix" required>
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="resume">Résumé :</label>
+        <textarea id="resume" name="resume" required></textarea>
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="dateSortie">Date de sortie :</label>
+        <input type="date" id="dateSortie" name="dateSortie" required>
+    </div>
+<br/>
+
+<br/>
+    <div>
+        <label for="imageCard">Image Principale :</label>
+        <input type="file" id="imageCard" name="imageCard" accept="image/jpg, png">
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="gif">GIF :</label>
+        <input type="file" id="gif" name="gif" accept="image/gif">
+    </div>
+<br/>
+
+<br/>
+    <div>
+        <label for="imageBanniere">Image bannière :</label>
+        <input type="file" id="imageBanniere" name="imageBanniere" accept="image/*">
+    </div>
+<br/>
+<br/>
+    <div>
+        <label for="idGenre">Genre :</label>
+        <select id="idGenre" name="idGenre" required>
+            <option value="">Sélectionnez un genre</option>
+         {% for genre in genres %}
+                <option value="{{ genre.id_genre }}">{{ genre.libelle_genre }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div>
+
+<div>
+
+<br/>
+<br/>
+<div>
+
+
+   <div>
+        <label for="categories">Categories :</label>
+        <select id="categories" name="categories" required>
+            <option value="">Sélectionnez une categories</option>
+         {% for categorie in categories %}
+                <option value="{{ categorie.id_categorie }}">{{ categorie.libelle_categorie }}</option>
+        {% endfor %} 
+        </select>
+    </div> 
+<br/>
+<br/>
+<!-- Sélection des contrôleurs -->
+<div>
+    <label>Contrôleurs :</label>
+    <div class="checkbox-group">
+        {% for controlleur in controlleurs %}
+            <div class="checkbox-item">
+                <input type="checkbox" 
+                       id="controlleur_{{ controlleur.id_controlleurs }}" 
+                       name="controlleurs[]" 
+                       value="{{ controlleur.id_controlleurs }}">
+                <label for="controlleur_{{ controlleur.id_controlleurs }}">
+                    {{ controlleur.libelle_controlleur }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<br/>
+<br/>
+
+    <input type="file" name="medias[]" multiple>
+    <button class="btn-green" type="submit">Soumettre le jeu</button>
+</form>
+<style>
+    select[multiple] {
+        min-width: 200px;
+        min-height: 100px;
+        padding: 8px;
+    }
+    .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 5px;
+    }
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "/editeur/layoutEditeur.twig" %}
+
+{% block content %}
+    <a href="/jeuxenligne" class="btn-green">Listes des Jeux</a>
+
+    <div class="card-container">
+        {% if jeu %}
+        {% if jeu.reduction != NULL %}      
+         {% include 'components/cardEditeur.twig' with {
+            'card_title':"#{jeu.nom_jeu} ",
+            'card_img':"#{jeu.image_banniere}",
+            'card_text': "#{jeu.resume}", 
+            'card_prix': "Prix initiale : #{jeu.prix}€",
+            'reduction': "- #{jeu.statut_promotion} : #{jeu.prix_final}€",
+            'card_date': "Date de sortie : #{jeu.date_sortie}",
+            'button_modifier':"true",
+            'button_supprimer':"true",
+             }
+        %}
+
+        {% else %}
+            {% include 'components/cardEditeur.twig' with {
+            'card_title':"#{jeu.nom_jeu} ",
+            'card_img':"#{jeu.image_banniere}",
+            'card_text': "#{jeu.resume}", 
+            'card_prix': "Prix : #{jeu.prix}€",
+            'card_date': "Date de sortie : #{jeu.date_sortie}",
+            'button_modifier':"true",
+            'button_supprimer':"true",
+             }
+        %}
+        {% endif %}
+               {% else %}
+            {% include 'components/cardEditeur.twig' with {'card_link':'/jeu','card_title':"Aucun jeu trouvé",'card_text':""} %}
+        {% endif %} 
+    </div>
+
+
+
+
+{% endblock %}
+
+

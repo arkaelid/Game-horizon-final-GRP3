@@ -1,0 +1,28 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content" id="content">
+    <div class="profil-container">
+        <div class="profil-header">
+            <div class="profil-avatar">
+                <img src="{{ userProfile.chemin_img_user }}" alt="Photo de profil">
+            </div>
+            <h1>{{ userProfile.pseudo_utilisateur }}</h1>
+        </div>
+
+        <div class="profil-info">
+            <div class="info-group">
+                <label>Nom d'utilisateur :</label>
+                <p>{{ userProfile.pseudo_utilisateur }}</p>
+            </div>
+            <div class="info-group">
+                <label>Email :</label>
+                <p>{{ userProfile.mail }}</p>
+            </div>
+        </div>
+        <div class="profil-action">
+            <button class="profil-btn">Modifier le profil</button>
+        </div>
+    </div>
+</main>
+{% endblock %}

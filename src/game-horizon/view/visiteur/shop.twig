@@ -1,0 +1,168 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content" id="content">
+    <section class="search-section">
+        <div class="search-container">
+            <form action="#" method="GET" class="search-form" onsubmit="return false;">
+            <div class="search-input-container">
+                <input type="text" name="q" id="search-input" placeholder="Rechercher un jeu..." autocomplete="off">
+                <div id="search-suggestions" class="search-suggestions"></div>
+            </div>
+            </form>
+        </div>
+    
+
+        <div class="filters-container">
+            <form action="/" method="GET" class="filters-form">
+                <div class="filter-group">
+                    <label for="category">Catégorie:</label>
+                    <select name="category" id="category">
+                        <option value="">Toutes les catégories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id_categorie }}" {% if selectedCategory == category.id_categorie %}selected{% endif %}>
+                                {{ category.libelle_categorie }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="genre">Genre:</label>
+                    <select name="genre" id="genre">
+                        <option value="">Tous les genres</option>
+                        {% for genre in genres %}
+                            <option value="{{ genre.id_genre }}" {% if selectedGenre == genre.id_genre %}selected{% endif %}>
+                                {{ genre.libelle_genre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="filter-button">Filtrer</button>
+            </form>
+        </div>
+    </section>
+
+    <h2 class="slider-NEWtitle">Nouveautés</h2>
+    <div class="slider-NEWcontainer">
+        <button class="slider-NEWbutton prev">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2"/>
+            </svg>
+        </button>
+
+        <div class="slider-NEWgames">
+            {% for NEWgame in NEWgames %}
+                <a href="/game/{{ NEWgame.id_jeu }}" class="card">
+                    <img src="/img/{{ NEWgame.image_card }}" alt="{{ NEWgame.nom_jeu }}" class="card-image" data-gif="/img/{{ NEWgame.gif }}">
+                    <div class="game-card-content">
+                        <h3>{{ NEWgame.nom_jeu }}</h3>
+                        <p class="tags"> Tags: {{ NEWgame.categories }} | {{ NEWgame.libelle_genre }} </p>
+                        <p class="types"> Jouabilité: {{ NEWgame.types }} </p>
+                        <p class="price">
+                            {% if NEWgame.prix_final is defined and NEWgame.prix_final != NEWgame.prix %}
+                                <span class="original-price">{{ NEWgame.prix }}€</span>
+                                <span class="discounted-price">{{ NEWgame.prix_final }}€</span>
+                                <span class="discount-badge">-{{ NEWgame.reduction }}%</span>
+                            {% else %}
+                                {{ NEWgame.prix }}€
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+
+        <button class="slider-NEWbutton next">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18L15 12L9 6" stroke="white" stroke-width="2"/>
+            </svg>
+        </button>
+    </div>
+    
+    <h2 class="slider-UCtitle">Jeux à venir</h2>
+    <div class="slider-UCcontainer">
+        <button class="slider-UCbutton prev">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2"/>
+            </svg>
+        </button>
+
+        <div class="slider-UCgames">
+            {% for UCgame in UCgames %}
+                <a href="/game/{{ UCgame.id_jeu }}" class="card">
+                    <img src="/img/{{ UCgame.image_card }}" alt="{{ UCgame.nom_jeu }}" class="card-image" data-gif="/img/{{ UCgame.gif }}">
+                    <div class="game-card-content">
+                        <h3>{{ UCgame.nom_jeu }}</h3>
+                        <p class="tags"> Tags: {{ UCgame.categories }} | {{ UCgame.libelle_genre }} </p>
+                        <p class="types"> Jouabilité: {{ UCgame.types }} </p>
+                        <p class="price">
+                            {% if UCgame.prix_final is defined and UCgame.prix_final != UCgame.prix %}
+                                <span class="original-price">{{ UCgame.prix }}€</span>
+                                <span class="discounted-price">{{ UCgame.prix_final }}€</span>
+                                <span class="discount-badge">-{{ UCgame.reduction }}%</span>
+                            {% else %}
+                                {{ UCgame.prix }}€
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+
+        <button class="slider-UCbutton next">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18L15 12L9 6" stroke="white" stroke-width="2"/>
+            </svg>
+        </button>
+    </div> 
+
+    <h2 class="slider-ALLtitle">Tout les jeux</h2>
+    <div class="page-jeux">
+        {% for game in games %}
+            <a href="/game/{{ game.id_jeu }}" class="card">
+                <img src="/img/{{ game.image_card }}" alt="{{ game.nom_jeu }}" class="card-image" data-gif="/img/{{ game.gif }}">
+                <div class="game-card-content">
+                    <h3>{{ game.nom_jeu }}</h3>
+                    <p class="tags"> Tags: {{ game.categories }} | {{ game.libelle_genre }} </p>
+                    <p class="types"> Jouabilité: {{ game.types }} </p>
+                    <p class="price">
+                        {% if game.prix_final is defined and game.prix_final != game.prix %}
+                            <span class="original-price">{{ game.prix }}€</span>
+                            <span class="discounted-price">{{ game.prix_final }}€</span>
+                            <span class="discount-badge">-{{ game.reduction }}%</span>
+                        {% else %}
+                            {{ game.prix }}€
+                        {% endif %}
+                    </p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.discounted-price {
+    color: #e63946;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.discount-badge {
+    background-color: #e63946;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+</style>
+{% endblock %}

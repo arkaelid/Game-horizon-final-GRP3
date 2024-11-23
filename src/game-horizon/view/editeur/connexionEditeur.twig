@@ -1,0 +1,24 @@
+{% extends "/admin/layoutAdmin.twig" %}
+
+{% block content %}
+   <div class="login">
+        <h2>Connexion Editeur</h2>
+        <form action="/loginediteur" method="POST" > 
+        <label for="login-editeur"> Votre Login: </label>
+        <input type="text" class="login-editeur" id="login-editeur" name="login-editeur" required/>
+        </br>
+        </br>
+        <label for="password_editeur"> Votre Mot de Passe : </label>
+        <input type="password" class="password-editeur" id="password-editeur" name="password-editeur" required/>
+        </br>
+        </br>
+        <label for="bis-password_editeur"> Retapez votre Mot de Passe : </label>
+        <input type="password" class="bis-password-editeur" id="bis-password-editeur" name="bis-password-editeur" required/> 
+        </br>
+        </br>
+            <button class="btn btn-primary btn-block btn-large" type="submit">Se connecter</button>
+        </form>
+
+    </div>
+{% endblock %}
+ 

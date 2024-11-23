@@ -1,0 +1,70 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content" id="content">
+    <h2 class="commande-title">Mon panier</h2>
+    <div class="ligne-commande">
+        {% for game in games %}
+            <hr>
+                <div class="info-ligne">
+                    <img src="/img/{{ game.image_card }}" alt="{{ game.nom_jeu }}">
+                    <div class="game-title">
+                        <h3>{{ game.nom_jeu }}</h3>
+                    </div>
+                    
+                    <div class="game-tags">
+                        <p>Tags: {{ game.categories }} | {{ game.libelle_genre }}</p>
+                    </div>
+                    
+                    <div class="game-date">
+                        <p> Date de sortie: {{ game.date_sortie }}</p>
+                    </div>
+                    
+                    <div class="game-price">
+                        {% if game.reduction %}
+                            <p>
+                                <span class="original-price">{{ game.prix }}€</span>
+                                <span class="discounted-price">{{ game.prix_final }}€</span>
+                                <span class="discount-badge">-{{ game.reduction }}%</span>
+                            </p>
+                        {% else %}
+                            <p>{{ game.prix }}€</p>
+                        {% endif %}
+                    </div>
+                    
+                    <form method="post" action="/panier">
+                        <input type="hidden" name="del_jeu" value="{{ game.id_jeu }}"/>
+                        <button type="submit" class="btn-test" id="btn-del"> Supprimer </button>
+                    </form>
+                </div>
+        {% endfor %}
+        <hr>
+    </div>
+    <a href="/commande" class="btn-test" id="btn-commande">Passer la commande</a>
+</main>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.discounted-price {
+    color: #e63946;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.discount-badge {
+    background-color: #e63946;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+</style>
+{% endblock %}

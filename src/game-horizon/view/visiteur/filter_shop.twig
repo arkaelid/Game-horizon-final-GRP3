@@ -1,0 +1,61 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content" id="content">
+    <section class="search-section">
+        <div class="search-container">
+            <form action="#" method="GET" class="search-form" onsubmit="return false;">
+            <div class="search-input-container">
+                <input type="text" name="q" id="search-input" placeholder="Rechercher un jeu..." autocomplete="off">
+                <div id="search-suggestions" class="search-suggestions"></div>
+            </div>
+            </form>
+        </div>
+    
+        <div class="filters-container">
+            <form action="/" method="GET" class="filters-form">
+                <div class="filter-group">
+                    <label for="category">Catégorie:</label>
+                    <select name="category" id="category">
+                        <option value="">Toutes les catégories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id_categorie }}" {% if selectedCategory == category.id_categorie %}selected{% endif %}>
+                                {{ category.libelle_categorie }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="genre">Genre:</label>
+                    <select name="genre" id="genre">
+                        <option value="">Tous les genres</option>
+                        {% for genre in genres %}
+                            <option value="{{ genre.id_genre }}" {% if selectedGenre == genre.id_genre %}selected{% endif %}>
+                                {{ genre.libelle_genre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="filter-button">Filtrer</button>
+            </form>
+        </div>
+    </section> 
+
+    <div class="page-jeux">
+        {% for game in games %}
+            <a href="/game/{{ game.id_jeu }}" class="card">
+                <img src="{{ game.image_card }}" alt="{{ game.nom_jeu }}" class="card-image" data-gif="{{ game.gif }}">
+                <div class="game-card-content">
+                    <h3>{{ game.nom_jeu }}</h3>
+                    <p class="tags"> Tags: {{ game.categories }} | {{ game.libelle_genre }} </p>
+                    <p class="types"> Jouabilité: {{ game.types }} </p>
+                    <p class="price">{{ game.prix }} €</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+</main>
+{% endblock %}
+

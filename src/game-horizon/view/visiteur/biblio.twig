@@ -1,0 +1,360 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content" id="content">
+    <h2 class="biblio-title">Ma bibliothèque</h2>
+    <div class="games-grid">
+        {% for game in games %}
+            <div class="game-card">
+                <img src="/img/{{ game.image_card }}" alt="{{ game.nom_jeu }}">
+                <div class="game-info">
+                    <div class="game-header">
+                        <h3>{{ game.nom_jeu }}</h3>
+                        <div class="dropdown">
+                            <button class="dropbtn"><i class="fas fa-ellipsis-vertical"></i></button>
+                            <div class="dropdown-content">
+                                <a href="/bibliotheque/download/{{ game.id_jeu }}">
+                                    <i class="fas fa-download"></i> Télécharger
+                                </a>
+                                <a href="#" onclick="alert('Fonctionnalité en développement')">
+                                    <i class="fas fa-sync-alt"></i> Mise à jour
+                                </a>
+                                {% if not game.demande_remboursement %}
+                                    <a href="#" onclick="openRefundModal({{ game.id_jeu }}, '{{ game.nom_jeu }}')">
+                                        <i class="fas fa-undo"></i> Demander un remboursement
+                                    </a>
+                                {% else %}
+                                    <a href="#" class="disabled" onclick="return false;">
+                                        <i class="fas fa-undo"></i> Demande en cours
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <p class="game-tags">{{ game.categories }}</p>
+                    <p class="game-genre">{{ game.libelle_genre }}</p>
+                    <p class="purchase-date">Acheté le : {{ game.date_achat|date("d/m/Y") }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modal de remboursement -->
+    <div id="refundModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Demande de remboursement</h2>
+            <form id="refundForm" method="POST" onsubmit="submitRefundForm(event)">
+                <input type="hidden" name="id_jeu" id="refundGameId">
+                <div class="form-group">
+                    <label for="raison">Raison du remboursement :</label>
+                    <textarea name="raison" id="raison" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Envoyer la demande</button>
+                    <button type="button" class="btn-cancel" onclick="closeRefundModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if session.success or session.error %}
+        <div class="alert {{ session.success ? 'alert-success' : 'alert-error' }}" id="alert-message">
+            {{ session.success ? session.success : session.error }}
+        </div>
+    {% endif %}
+</main>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.dropdown-content a.disabled {
+    color: #666;
+    cursor: not-allowed;
+}
+
+.alert {
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 5px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.alert.fade-out {
+    opacity: 0;
+}
+
+.games-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.game-card {
+    flex: 0 0 300px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+}
+
+.game-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.game-info {
+    padding: 5rem;
+}
+
+.game-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+}
+
+.game-tags, .game-genre {
+    color: #888;
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+}
+
+.purchase-date {
+    color: #666;
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 1.2rem;
+}
+
+.dropbtn:hover {
+    color: #888;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #2a2a2a;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 5px;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #333;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Ajout d'une animation pour le menu */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+.biblio-title {
+    padding: 2rem;
+    margin: 0;
+    color: white;
+}
+
+/* Styles pour la modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #2a2a2a;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    color: white;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: white;
+}
+
+.form-group {
+    margin: 15px 0;
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+    background-color: #333;
+    border: 1px solid #444;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-submit, .btn-cancel {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+.dropdown-content a.disabled {
+    color: #666;
+    cursor: not-allowed;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: #dff0d8;
+    border: 1px solid #d6e9c6;
+    color: #3c763d;
+}
+
+.alert-error {
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    color: #a94442;
+}
+</style>
+
+<script>
+function openRefundModal(gameId, gameName) {
+    document.getElementById('refundModal').style.display = 'block';
+    document.getElementById('refundGameId').value = gameId;
+}
+
+function closeRefundModal() {
+    document.getElementById('refundModal').style.display = 'none';
+}
+
+function submitRefundForm(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(document.getElementById('refundForm'));
+    
+    fetch('/bibliotheque/remboursement', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            closeRefundModal();
+            location.reload();
+        } else {
+            throw new Error('Erreur lors de la soumission');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de la demande de remboursement');
+    });
+}
+
+window.onclick = function(event) {
+    let modal = document.getElementById('refundModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const alert = document.getElementById('alert-message');
+    if (alert) {
+        setTimeout(function() {
+            alert.classList.add('fade-out');
+            setTimeout(function() {
+                alert.remove();
+            }, 500); // Attendre que l'animation de fade-out soit terminée
+        }, 4000); // Disparaît après 4 secondes
+    }
+});
+</script>
+{% endblock %}

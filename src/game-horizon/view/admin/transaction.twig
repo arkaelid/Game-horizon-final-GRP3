@@ -1,0 +1,173 @@
+{% extends "admin/layoutAdmin.twig" %}
+
+{% block content %}
+<div class="transaction-dashboard">
+    <h1>Tableau de bord des ventes</h1>
+
+
+    {% if error is defined %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <div class="dashboard-grid">
+        <!-- Colonne de gauche : Cartes des statistiques -->
+        <div class="left-column">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>Total des ventes</h3>
+                    <p class="amount">{{ total_ventes|default(0)|number_format(2, ',', ' ') }} €</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Ventes du mois</h3>
+                    <p class="amount">{{ ventes_mois|default(0)|number_format(2, ',', ' ') }} €</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Ventes du jour</h3>
+                    <p class="amount">{{ ventes_jour|default(0)|number_format(2, ',', ' ') }} €</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne de droite : Tableaux -->
+        <div class="right-column">
+            <!-- Meilleurs jeux -->
+            <div class="best-sellers">
+                <h2>Meilleures ventes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jeu</th>
+                            <th>Nombre de ventes</th>
+                            <th>Total des ventes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if meilleurs_jeux is empty %}
+                            <tr><td colspan="3">Aucune vente enregistrée</td></tr>
+                        {% else %}
+                            {% for jeu in meilleurs_jeux %}
+                            <tr>
+                                <td>{{ jeu.nom_jeu }}</td>
+                                <td>{{ jeu.nb_ventes }}</td>
+                                <td>{{ jeu.total_ventes|number_format(2, ',', ' ') }} €</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Derniers achats -->
+            <div class="recent-purchases">
+                <h2>Dernières transactions</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Utilisateur</th>
+                            <th>Jeux achetés</th>
+                            <th>Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if derniers_achats is empty %}
+                            <tr><td colspan="4">Aucune transaction récente</td></tr>
+                        {% else %}
+                            {% for achat in derniers_achats %}
+                            <tr>
+                                <td>{{ achat.date_heure_transaction|date('d/m/Y H:i') }}</td>
+                                <td>{{ achat.pseudo_utilisateur }}</td>
+                                <td>{{ achat.jeux }}</td>
+                                <td>{{ achat.total_transaction|number_format(2, ',', ' ') }} €</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.transaction-dashboard {
+    padding: 20px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr; /* Colonne gauche fixe, colonne droite flexible */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.left-column .stats-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.stat-card .amount {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 10px 0 0;
+    color: #2c3e50;
+}
+
+.best-sellers, .recent-purchases {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .left-column .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+</style>
+{% endblock %}

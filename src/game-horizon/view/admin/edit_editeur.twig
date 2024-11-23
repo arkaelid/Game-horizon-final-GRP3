@@ -1,0 +1,242 @@
+{% extends "/admin/layoutAdmin.twig" %}
+
+{% block body_class %}edit-editeur-page{% endblock %}
+
+{% block content %}
+<div class="edit-editeur-container">
+    <h1 class="edit-editeur-title">Modifier l'éditeur</h1>
+    
+    <div class="edit-editeur-layout">
+        <!-- Colonne de gauche : Formulaire d'édition -->
+        <div class="edit-editeur-main">
+            <form class="edit-editeur-form" method="POST">
+                <div class="edit-editeur-field">
+                    <label for="edit-pseudo" class="edit-editeur-label">Société :</label>
+                    <input type="text" id="edit-pseudo" name="pseudo" value="{{ editeur.nom_societe }}" required class="edit-editeur-input">
+                </div>
+                 <div class="edit-editeur-field">
+                    <label for="edit-mail" class="edit-editeur-label">Email :</label>
+                    <input type="email" id="edit-mail" name="mail" value="{{ editeur.mail_editeur }}" required class="edit-editeur-input">
+                </div>
+                <div class="edit-editeur-field">
+                    <label for="edit-adresse" class="edit-editeur-label">Adresse :</label>
+                    <input type="text" id="edit-adresse" name="adresse" value="{{ editeur.adresse_editeur }}" required class="edit-editeur-input">
+                </div>
+                <div class="edit-editeur-field">
+                    <label for="edit-adresse" class="edit-editeur-label">Siret :</label>
+                    <input type="text" id="edit-siret" name="siret" value="{{ editeur.siret }}" required class="edit-editeur-input">
+                </div>
+                <div class="edit-editeur-profile-image">
+                    <p class="edit-editeur-image-label">Image de profil actuelle :</p>
+                    <img src="{{ editeur.chemin_img_editeur }}" alt="Image de profil de {{ editeur.nom_societe }}" class="edit-editeur-image">
+                </div>
+                
+                <div class="edit-editeur-actions">
+                    <button type="submit" name="action" value="reset_image" class="edit-editeur-button edit-editeur-button-reset">Réinitialiser l'image de profil</button>
+                    <button type="submit" name="action" value="update" class="edit-editeur-button edit-editeur-button-save">Enregistrer les modifications</button>
+                </div>
+                 
+            </form>
+            
+            <div class="edit-editeur-danger-zone">
+                <p class="danger-zone-text">Attention : La suppression d'un éditeur est irréversible.</p>
+                <button onclick="confirmDelete()" class="edit-editeur-button edit-editeur-button-delete">Supprimer l'éditeur</button>
+            </div>
+        </div>
+
+        <!-- Colonne de droite : Liste des jeux -->
+        <div class="edit-editeur-games">
+            <h2 class="games-title">Jeux de l'éditeur</h2>
+            <div class="games-list">
+                {% if jeux|length > 0 %}
+                    {% for jeu in jeux %}
+                        <div class="game-card">
+                            <img src="/img/{{ jeu.image_card }}" alt="{{ jeu.nom_jeu }}" class="game-image">
+                            <div class="game-info">
+                                <h3 class="game-title">{{ jeu.nom_jeu }}</h3>
+                                <div class="game-price">
+                                    {% if jeu.reduction %}
+                                        <span class="original-price">{{ jeu.prix }}€</span>
+                                        <span class="discounted-price">{{ jeu.prix_final }}€</span>
+                                        <span class="discount-badge">-{{ jeu.reduction }}%</span>
+                                    {% else %}
+                                        <span>{{ jeu.prix }}€</span>
+                                    {% endif %}
+                                </div>
+                                <div class="game-date">Sortie : {{ jeu.date_sortie|date('d/m/Y') }}</div>
+                                <a href="/admin/games/edit/{{ jeu.id_jeu }}" class="game-edit-link">Modifier</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-games">Aucun jeu trouvé pour cet éditeur.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire de suppression -->
+    <form id="deleteForm" action="/editeur/delete/{{ editeur.id_editeur }}" method="POST"></form>
+</div>
+
+<style>
+.edit-editeur-danger-zone {
+    margin-top: 40px;
+    padding: 20px;
+    border: 2px solid #dc3545;
+    border-radius: 8px;
+}
+
+.danger-zone-title {
+    color: #dc3545;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.danger-zone-text {
+    color: #721c24;
+    margin-bottom: 15px;
+}
+
+.edit-editeur-button-delete {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-editeur-button-delete:hover {
+    background-color: #c82333;
+}
+
+.edit-editeur-layout {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.edit-editeur-main {
+    flex: 1;
+}
+
+.edit-editeur-games {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.games-title {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+.games-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.game-card {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.game-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.game-info {
+    flex: 1;
+}
+
+.game-title {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+}
+
+.game-price {
+    margin-bottom: 5px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.discounted-price {
+    color: #e63946;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.discount-badge {
+    background-color: #e63946;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.game-date {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.game-edit-link {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.game-edit-link:hover {
+    background-color: #0056b3;
+}
+
+.no-games {
+    color: #666;
+    text-align: center;
+    padding: 20px;
+}
+
+.games-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.games-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.games-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.games-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+
+<script>
+function confirmDelete() {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet éditeur ? Cette action est irréversible.')) {
+        document.getElementById('deleteForm').submit();
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "/editeur/layoutEditeur.twig" %}
+{% block content %}
+        <img src="img/{{session.chemin_img_editeur}}" >
+        <p> Votre Numéro Siret : {{session.siret}}</p>
+        <p> Votre Nom de Société : {{session.nom_societe}}</p>
+        <p> Votre Adresse : {{session.adresse_editeur}}</p>
+        </br>
+        </br>
+        <form action="/updateprofilediteur" method="POST" > 
+
+        <label for="mail-editeur"> Votre E-mail : </label>
+        <input type="email" class="mail-editeur" id="mail-editeur" name="mail-editeur" value = "{{session.mail_editeur}}"/> 
+        </br>
+        </br>
+        <label for="login-editeur"> Votre Login: </label>
+        <input type="text" class="login-editeur" id="login-editeur" name="login-editeur" value = "{{session.login_editeur}}"/>
+        </br>
+        </br>
+        <label for="password-editeur"> Changer de Mot de Passe : </label>
+        <input type="password" class="password-editeur" id="password-editeur" name="password-editeur"/>
+        </br>
+        </br>
+        <label for="bis-password-editeur"> Confirmer votre Mot de Passe : </label>
+        <input type="password" class="bis-password-editeur" id="bis-password-editeur" name="bis-password-editeur"/>
+        </br>
+        </br>
+            <button type="submit">Modifier</button>
+        </form>
+        </div> 
+{% endblock %}

@@ -1,0 +1,289 @@
+{% extends "/admin/layoutAdmin.twig" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Gestion des remboursements</h1>
+    
+    {% if session.success %}
+        <div class="alert alert-success">
+            {{ session.success }}
+        </div>
+    {% endif %}
+
+    {% if session.error %}
+        <div class="alert alert-danger">
+            {{ session.error }}
+        </div>
+    {% endif %}
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Demandes de remboursement 
+                {% if pending_count > 0 %}
+                    <span class="badge badge-warning">{{ pending_count }} en attente</span>
+                {% endif %}
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Jeu</th>
+                            <th>Utilisateur</th>
+                            <th>Date demande</th>
+                            <th>Montant</th>
+                            <th>Raison</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for remb in remboursements %}
+                            <tr class="{{ remb.statut == 'en_attente' ? 'table-warning' : '' }}">
+                                <td>{{ remb.id_remboursement }}</td>
+                                <td>
+                                    <img src="/img/{{ remb.image_card }}" alt="{{ remb.nom_jeu }}" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {{ remb.nom_jeu }}
+                                </td>
+                                <td>{{ remb.pseudo_utilisateur }}</td>
+                                <td>{{ remb.date_formatee }}</td>
+                                <td>{{ remb.montant_total }}€</td>
+                                <td>{{ remb.raison }}</td>
+                                <td>
+                                    {% if remb.statut == 'en_attente' %}
+                                        <span class="badge badge-warning">En attente</span>
+                                    {% elseif remb.statut == 'accepte' %}
+                                        <span class="badge badge-success">Accepté</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Refusé</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if remb.statut == 'en_attente' %}
+                                        <div class="d-inline">
+                                            <a href="/admin/remboursement/accept/{{ remb.id_remboursement }}" class="btn btn-success btn-sm">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="/admin/remboursement/reject/{{ remb.id_remboursement }}" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Style général */
+.container-fluid {
+    padding: 20px;
+    background-color: #f8f9fc;
+    margin: 2rem;
+    border-radius: 10px;
+    height: calc(100vh - 4rem); /* Hauteur totale moins les marges */
+    overflow-y: auto; /* Permet le scroll vertical */
+}
+
+/* Style du titre */
+.h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+/* Style de la carte */
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    margin-bottom: 2rem;
+    background-color: #fff;
+    height: calc(100% - 100px); /* Hauteur totale moins l'espace pour le titre */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+    padding: 1rem 1.25rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+    flex: 1;
+    overflow: hidden; /* Cache le débordement */
+}
+
+/* Style du tableau */
+.table-responsive {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-y: auto; /* Permet le scroll vertical */
+}
+
+.table {
+    color: #333;
+    margin-bottom: 0;
+    width: 100%;
+    background-color: #fff;
+}
+
+/* Style de l'en-tête du tableau */
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fc;
+    z-index: 1;
+}
+
+.table th {
+    background-color: #f8f9fc;
+    color: #4e73df;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 1rem;
+    vertical-align: middle;
+    border: 1px solid #e3e6f0;
+}
+
+.table td {
+    padding: 1rem;
+    vertical-align: middle;
+    border: 1px solid #e3e6f0;
+}
+
+/* Style des lignes du tableau */
+.table-warning {
+    background-color: #fff3cd !important;
+}
+
+/* Style des badges */
+.badge {
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.badge-warning {
+    background-color: #f6c23e;
+    color: #fff;
+}
+
+.badge-success {
+    background-color: #1cc88a;
+    color: #fff;
+}
+
+.badge-danger {
+    background-color: #e74a3b;
+    color: #fff;
+}
+
+/* Style des boutons */
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    margin: 0 0.2rem;
+    transition: all 0.2s;
+}
+
+.btn-success {
+    background-color: #1cc88a;
+    border-color: #1cc88a;
+}
+
+.btn-success:hover {
+    background-color: #169b6b;
+    border-color: #169b6b;
+}
+
+.btn-danger {
+    background-color: #e74a3b;
+    border-color: #e74a3b;
+}
+
+.btn-danger:hover {
+    background-color: #be3e32;
+    border-color: #be3e32;
+}
+
+/* Style des images */
+.table img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Style des alertes */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.35rem;
+}
+
+.alert-success {
+    color: #0f6848;
+    background-color: #d0f3e3;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 10px;
+    }
+    
+    .table td, .table th {
+        padding: 0.75rem;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* Personnalisation de la barre de défilement */
+.table-responsive::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+{% endblock %}

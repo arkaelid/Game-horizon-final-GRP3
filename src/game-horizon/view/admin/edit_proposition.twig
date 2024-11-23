@@ -1,0 +1,228 @@
+{% extends "/admin/layoutAdmin.twig" %}
+
+{% block content %}
+<div class="edit-proposition-wrapper">
+    <!-- Section détails du jeu -->
+    <section class="game-details-section">
+        <div class="game-details-container">
+            <h1>Vérification du jeu</h1>
+            
+            <div class="game-header">
+                <img src="/img/{{ game.image_card }}" alt="{{ game.nom_jeu }}" class="game-banner">
+                <div class="game-main-info">
+                    <h2>{{ game.nom_jeu }}</h2>
+                    <p class="publisher">Par {{ game.nom_societe }}</p>
+                    <p class="price">{{ game.prix }}€</p>
+                </div>
+            </div>
+
+            <div class="game-info-grid">
+                <div class="info-group">
+                    <h3>Informations générales</h3>
+                    <p><strong>Catégorie:</strong> {{ game.libelle_categorie }}</p>
+                    <p><strong>Genre:</strong> {{ game.libelle_genre }}</p>
+                    <p><strong>Types:</strong> {{ game.types }}</p>
+                    <p><strong>Date de sortie:</strong> {{ game.date_sortie }}</p>
+                </div>
+
+                <div class="info-group">
+                    <h3>Description</h3>
+                    <p class="game-description">{{ game.resume | raw }}</p>
+                </div>
+
+                <div class="info-group">
+                    <h3>Configuration requise</h3>
+                    <div class="requirements">
+                        <div class="minimum">
+                            <h4>Minimum</h4>
+                            <p>{{ game.config_min }}</p>
+                        </div>
+                        <div class="recommended">
+                            <h4>Recommandée</h4>
+                            <p>{{ game.config_rec }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <h3>Médias</h3>
+                    <div class="media-preview">
+                        {% if game.gif %}
+                            <img src="/img/{{ game.gif }}" alt="GIF du jeu" class="game-gif">
+                        {% endif %}
+
+                        {% for media in medias %}
+                        <div class="preview-item">
+                            {% if media.chemin_media ends with '.jpg' or 'png'  or 'webp' %}
+                                <img src="/img/{{ media.chemin_media }}" alt="Preview {{ loop.index }}">
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section actions -->
+    <section class="actions-section">
+        <div class="actions-container">
+            <h3>Actions</h3>
+            <div class="action-buttons">
+                <form action="/proposition/validate/{{ game.id_jeu }}" method="POST" class="validate-form">
+                    <button type="submit" class="btn btn-success">Valider le jeu</button>
+                </form>
+                <form action="/proposition/reject/{{ game.id_jeu }}" method="POST" class="reject-form" onsubmit="return confirm('Êtes-vous sûr de vouloir rejeter ce jeu ?');">
+                    <button type="submit" class="btn btn-danger">Rejeter le jeu</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.edit-proposition-wrapper {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    height: calc(100vh - 60px);
+}
+
+.game-details-section {
+    flex: 1;
+    overflow-y: auto;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.actions-section {
+    width: 300px;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.game-banner {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.game-main-info {
+    margin: 20px 0;
+}
+
+.publisher {
+    color: #666;
+    margin: 5px 0;
+}
+
+.price {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.game-info-grid {
+    display: grid;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.info-group {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.info-group h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.requirements {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.media-preview {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.game-gif {
+    width: 100%;
+    border-radius: 4px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+/* Scrollbar personnalisée */
+.game-details-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.game-details-section::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.game-details-section::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.game-details-section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Confirmation avant rejet
+    document.querySelector('.reject-form').addEventListener('submit', function(e) {
+        if (!confirm('Êtes-vous sûr de vouloir rejeter ce jeu ? Cette action est irréversible.')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %}

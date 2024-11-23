@@ -1,0 +1,41 @@
+   {% if card_link  %}
+    <a href="{{card_link}}">
+    {% endif %}
+    <div class="card">
+        <h2>{{ card_title }}</h2>
+        <p >{{ card_type }}</p>
+        <p> {{card_text}} </p>
+        {% if card_img == true %}
+            <img src="/img/{{ card_img }}" > 
+        {% endif %}
+        <p> {{card_prix}} </p>
+        {% if reduction == true %}
+            <p> {{card_prix_reduit}} </p>
+            <p> {{reduction}} </p>
+
+        {% endif %}
+
+        <p> {{card_date}} </p>
+
+        {% if button_modifier == true %}
+            </br>
+            <button class="btn-green" onclick="window.location.href='/modificationjeu/#{jeu.id_jeu}'" type="submit">
+                Modifier le jeu (MAJ)
+            </button>
+            </br>
+        {% endif %}
+            {% if button_supprimer == true %}
+            </br>
+            <button class="btn-green" onclick="" type="submit">
+                Supprimer le jeu de la vente
+            </button>
+            </br>
+        {% endif %}
+
+        </div>
+        {% if card_link  %}
+
+    </a>
+    {% endif %}
+
+    

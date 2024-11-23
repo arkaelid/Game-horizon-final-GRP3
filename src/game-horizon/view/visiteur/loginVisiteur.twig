@@ -1,0 +1,33 @@
+{% extends '/visiteur/layout_user.twig' %}
+
+{% block content %}
+<main class="content" id="content">
+    <div class="login-container">
+        <h1>Connexion</h1>
+        
+        {% if error is defined %}
+            <div class="alert alert-error">
+                {{ error }}
+            </div>
+        {% endif %}
+        
+        <form action="/loginvisiteur" method="POST" class="login-form">
+            <div class="form-group">
+                <label for="login">Nom d'utilisateur</label>
+                <input type="text" id="login" name="login" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="btn-login">Se connecter</button>
+        </form>
+        
+        <div class="login-footer">
+            <p>Vous n'avez pas de compte ? <a href="/register">Créer un compte</a></p>
+        </div>
+    </div>
+</main>
+{% endblock %}

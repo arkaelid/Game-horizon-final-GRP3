@@ -1,0 +1,124 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content" id="content">
+    <div class="confirmation-container">
+        <div class="confirmation-message">
+            <i class="fas fa-check-circle"></i>
+            <h2>Commande confirmée !</h2>
+            <p>Votre commande a été validée avec succès.</p>
+            <p>Les jeux ont été ajoutés à votre bibliothèque.</p>
+        </div>
+        
+        <div class="confirmation-details">
+            <h3>Récapitulatif de votre commande :</h3>
+            {% for game in games %}
+                <div class="game-item">
+                    <img src="/img/{{ game.image_card }}" alt="{{ game.nom_jeu }}">
+                    <div class="game-info">
+                        <h4>{{ game.nom_jeu }}</h4>
+                        <p class="price">
+                            {% if game.reduction %}
+                                <span class="discounted-price">{{ game.prix_final }}€</span>
+                                <span class="discount-badge">-{{ game.reduction }}%</span>
+                            {% else %}
+                                {{ game.prix }}€
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <div class="total-price">
+                <p>Total payé : <span>{{ total }}€</span></p>
+            </div>
+        </div>
+
+        <div class="confirmation-actions">
+            <a href="/bibliotheque" class="btn-test">Voir ma bibliothèque</a>
+            <a href="/" class="btn-test">Retour à la boutique</a>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.confirmation-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.confirmation-message {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.confirmation-message i {
+    color: #4CAF50;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.confirmation-message h2 {
+    color: #4CAF50;
+    margin-bottom: 1rem;
+}
+
+.game-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #2a2a2a;
+    border-radius: 5px;
+}
+
+.game-item img {
+    width: 100px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 1rem;
+}
+
+.game-info {
+    flex: 1;
+}
+
+.game-info h4 {
+    margin: 0 0 0.5rem 0;
+}
+
+.total-price {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #333;
+    text-align: right;
+    font-size: 1.2rem;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-test {
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-test:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+</style>
+{% endblock %}

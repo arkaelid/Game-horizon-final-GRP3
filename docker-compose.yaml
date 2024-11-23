@@ -1,0 +1,46 @@
+services:
+  web:
+    image: nginx:latest
+    container_name: GH_nginx
+    # restart: always # unless-stopped | on-failure |  no
+    ports:
+      - "6001:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/:/etc/nginx/conf.d/
+      - ./nginx/logs:/var/log/nginx
+    links:
+      - php 
+  db:
+    image: mariadb:latest
+    container_name: GH_db
+    environment:
+      - MARIADB_ROOT_PASSWORD=root_pwd
+      - MARIADB_USER=game_user
+      - MARIADB_PASSWORD=game_pwd
+      - MARIADB_DATABASE=game_horizon
+    volumes:
+      # - ./db/:/var/lib/mysql/
+      - ./dump/:/docker-entrypoint-initdb.d/
+  php:
+    build:
+      context: ./php/
+      dockerfile: Dockerfile
+    # image: kapweb_php_fpm:0.0.1
+    container_name: GH_php
+    volumes:
+      - ./src:/var/www/html/
+    tmpfs: /tmp
+    command: sh -c "cd game-horizon ; composer install --ignore-platform-reqs && php-fpm"
+    links:
+      - db 
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: GH_phpmyadmin
+    ports:
+      - 6002:80
+    environment:
+      PMA_HOSTS: db
+    links:
+      - db

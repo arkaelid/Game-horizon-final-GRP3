@@ -1,0 +1,187 @@
+{% extends "/admin/layoutAdmin.twig" %}
+
+{% block body_class %}edit-user-page{% endblock %}
+
+{% block content %}
+<div class="edit-user-wrapper">
+    <!-- Section modification -->
+    <section class="edit-user-section">
+        <div class="edit-user-container">
+            <div class="edit-user-card">
+                <h1 class="edit-user-title">Modifier l'utilisateur</h1>
+                <form class="edit-user-form" method="POST">
+                    <div class="edit-user-field">
+                        <label for="edit-pseudo" class="edit-user-label">Pseudo :</label>
+                        <input type="text" id="edit-pseudo" name="pseudo" value="{{ user.pseudo_utilisateur }}" required class="edit-user-input">
+                    </div>
+                    
+                    <div class="edit-user-field">
+                        <label for="edit-mail" class="edit-user-label">Email :</label>
+                        <input type="email" id="edit-mail" name="mail" value="{{ user.mail }}" required class="edit-user-input">
+                    </div>
+                    
+                    <div class="edit-user-profile-image">
+                        <p class="edit-user-image-label">Image de profil actuelle :</p>
+                        <img src="{{ user.chemin_img_user }}" alt="Image de profil de {{ user.pseudo_utilisateur }}" class="edit-user-image">
+                    </div>
+                    
+                    <div class="edit-user-actions">
+                        <button type="submit" name="action" value="reset_image" class="edit-user-button edit-user-button-reset">Réinitialiser l'image de profil</button>
+                        <button type="submit" name="action" value="update" class="edit-user-button edit-user-button-save">Enregistrer les modifications</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section jeux -->
+    <section class="user-games-section">
+        <div class="user-games-container">
+            <div class="user-games-card">
+                <h2 class="user-games-title">Jeux achetés par {{ user.pseudo_utilisateur }}</h2>
+                <div class="user-games-scroll">
+                    {% if userGames is empty %}
+                        <p class="no-games">Aucun jeu acheté</p>
+                    {% else %}
+                        <div class="user-games-grid">
+                            {% for game in userGames %}
+                                <div class="game-item">
+                                    <img src="/img/{{ game.image_card }}" alt="{{ game.nom_jeu }}" class="game-image">
+                                    <div class="game-details">
+                                        <h3 class="game-title">{{ game.nom_jeu }}</h3>
+                                        <p class="game-price">{{ game.prix_paye }}€</p>
+                                        <p class="game-date">Acheté le {{ game.date_heure_transaction|date('d/m/Y') }}</p>
+                                        <span class="game-status {{ game.etat_transaction|lower }}">{{ game.etat_transaction }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.edit-user-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+}
+
+.edit-user-section {
+    flex: 0 0 40%; /* Prend 40% de la largeur */
+}
+
+.user-games-section {
+    flex: 0 0 60%; /* Prend 60% de la largeur */
+}
+
+.user-games-container {
+    height: 100%;
+    width: 100%;
+}
+
+.edit-user-card, .user-games-card {
+    height: 100%;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-games-scroll {
+    height: calc(100% - 60px); /* Hauteur totale moins la hauteur du titre */
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.user-games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    padding-bottom: 20px;
+}
+
+/* Styles pour la scrollbar */
+.user-games-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.user-games-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.user-games-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.user-games-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.user-games-title {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.game-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.game-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.game-details {
+    padding: 10px;
+}
+
+.game-title {
+    font-size: 1em;
+    margin: 0 0 5px 0;
+}
+
+.game-price {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.game-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.game-status {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.game-status.terminée {
+    background-color: #28a745;
+    color: white;
+}
+
+.game-status.remboursée {
+    background-color: #dc3545;
+    color: white;
+}
+
+.no-games {
+    color: #666;
+    text-align: center;
+    padding: 20px;
+}
+</style>
+{% endblock %}

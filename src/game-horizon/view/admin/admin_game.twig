@@ -1,0 +1,191 @@
+{% extends "/admin/layoutAdmin.twig" %}
+
+{% block content %}
+
+
+<div class="user-content">
+    <h1>Gestion des jeux</h1>
+    
+    {% if success is defined and success %}
+        <div class="alert alert-success" id="successAlert">{{ success }}</div>
+    {% endif %}
+    
+    <div class="tables-container">
+        <div class="table-wrapper">
+            <h2>Liste des jeux</h2>
+            <input type="text" id="searchGames" placeholder="Rechercher un jeu...">
+            <div class="table-container">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="id">ID <i class="fas fa-sort"></i></th>
+                            <th>Image</th>
+                            <th class="sortable" data-sort="nom">Nom <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="prix">Prix <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="date">Date de sortie <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="editeur">Éditeur <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="categorie">Catégorie <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="promotion">Promotion <i class="fas fa-sort"></i></th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gamesTableBody">
+                        {% for game in games %}
+                            <tr>
+                                <td>{{ game.id_jeu }}</td>
+                                <td>
+                                    <img src="/img/{{ game.image_card }}" alt="Image de {{ game.nom_jeu }}" style="width: 50px;">
+                                </td>
+                                <td>{{ game.nom_jeu }}</td>
+                                <td data-price="{{ game.prix }}">
+                                    {% if game.reduction %}
+                                        <span class="original-price">{{ game.prix }}€</span>
+                                        <span class="discounted-price">{{ game.prix_final }}€</span>
+                                        <span class="discount-badge">-{{ game.reduction }}%</span>
+                                    {% else %}
+                                        {{ game.prix }}€
+                                    {% endif %}
+                                </td>
+                                <td data-date="{{ game.date_sortie }}">{{ game.date_sortie|date('d/m/Y') }}</td>
+                                <td>{{ game.editeur }}</td>
+                                <td>{{ game.libelle_categorie }}</td>
+                                <td>{{ game.statut_promotion }}</td>
+                                <td>
+                                    <a href="/admin/games/edit/{{ game.id_jeu }}" class="btn btn-primary">Modifier</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable:hover {
+    background-color: #f5f5f5;
+}
+
+.sortable i {
+    margin-left: 5px;
+}
+
+.user-table th {
+    position: relative;
+    padding-right: 20px;
+}
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.discounted-price {
+    color: #e63946;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.discount-badge {
+    background-color: #e63946;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.querySelector('.user-table');
+    const tbody = document.getElementById('gamesTableBody');
+    let sortDirection = {};
+
+    // Fonction pour trier le tableau
+    function sortTable(column) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        // Inverser la direction du tri si on clique sur la même colonne
+        sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
+        
+        // Mettre à jour les icônes
+        document.querySelectorAll('.sortable i').forEach(icon => {
+            icon.className = 'fas fa-sort';
+        });
+        const currentIcon = document.querySelector(`[data-sort="${column}"] i`);
+        currentIcon.className = `fas fa-sort-${sortDirection[column] === 'asc' ? 'up' : 'down'}`;
+
+        // Trier les lignes
+        rows.sort((a, b) => {
+            let valueA, valueB;
+            
+            switch(column) {
+                case 'id':
+                    valueA = parseInt(a.children[0].textContent);
+                    valueB = parseInt(b.children[0].textContent);
+                    break;
+                case 'prix':
+                    valueA = parseFloat(a.querySelector(`td[data-price]`).dataset.price);
+                    valueB = parseFloat(b.querySelector(`td[data-price]`).dataset.price);
+                    break;
+                case 'date':
+                    valueA = new Date(a.querySelector(`td[data-date]`).dataset.date);
+                    valueB = new Date(b.querySelector(`td[data-date]`).dataset.date);
+                    break;
+                default:
+                    valueA = a.children[getColumnIndex(column)].textContent.trim().toLowerCase();
+                    valueB = b.children[getColumnIndex(column)].textContent.trim().toLowerCase();
+            }
+
+            if (valueA < valueB) return sortDirection[column] === 'asc' ? -1 : 1;
+            if (valueA > valueB) return sortDirection[column] === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        // Réinsérer les lignes triées
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // Obtenir l'index de la colonne en fonction de son nom
+    function getColumnIndex(column) {
+    switch(column) {
+        case 'id': return 0;
+        case 'nom': return 2;
+        case 'prix': return 3;
+        case 'date': return 4;
+        case 'editeur': return 5;
+        case 'categorie': return 6;
+        case 'promotion': return 7;
+        default: return 0;
+    }
+}
+
+    // Ajouter les écouteurs d'événements pour le tri
+    document.querySelectorAll('.sortable').forEach(header => {
+        header.addEventListener('click', () => {
+            const column = header.dataset.sort;
+            sortTable(column);
+        });
+    });
+
+    // Recherche
+    document.getElementById('searchGames').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = tbody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends "/admin/layoutAdmin.twig" %}
+
+{% block content %}
+<div class="edit-game-container">
+    <h1 class="edit-game-title">Modifier le jeu : {{ game.nom_jeu }}</h1>
+    
+    {% if error is defined and error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <div class="edit-game-danger-zone">
+        <p class="danger-zone-text">Attention : La suppression d'un jeu est irréversible.</p>
+        <form action="/admin/games/delete/{{ game.id_jeu }}" method="POST" onsubmit="return confirmDelete()">
+            <button type="submit" class="edit-game-button edit-game-button-delete">Supprimer le jeu</button>
+        </form>
+    </div>
+    <form class="edit-game-form" method="POST">
+        <div class="edit-game-layout">
+            <div class="edit-game-main">
+                <div class="edit-game-field">
+                    <label for="nom_jeu" class="edit-game-label">Nom du jeu :</label>
+                    <input type="text" id="nom_jeu" name="nom_jeu" value="{{ game.nom_jeu }}" required class="edit-game-input">
+                </div>
+
+                <div class="edit-game-field">
+                    <label for="prix" class="edit-game-label">Prix :</label>
+                    <input type="number" id="prix" name="prix" value="{{ game.prix }}" step="0.01" required class="edit-game-input">
+                </div>
+
+                <div class="edit-game-field">
+                    <label for="date_sortie" class="edit-game-label">Date de sortie :</label>
+                    <input type="date" id="date_sortie" name="date_sortie" value="{{ game.date_sortie }}" required class="edit-game-input">
+                </div>
+
+                <div class="edit-game-field">
+                    <label for="editeur" class="edit-game-label">Éditeur :</label>
+                    <select id="editeur" name="editeur" required class="edit-game-input">
+                        {% for editeur in editeurs %}
+                            <option value="{{ editeur.id_editeur }}" {% if editeur.id_editeur == game.id_editeur %}selected{% endif %}>
+                                {{ editeur.nom_societe }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="edit-game-field">
+                    <label for="categorie" class="edit-game-label">Catégorie :</label>
+                    <select id="categorie" name="categorie" required class="edit-game-input">
+                        {% for categorie in categories %}
+                            <option value="{{ categorie.id_categorie }}" {% if categorie.id_categorie == game.id_categorie %}selected{% endif %}>
+                                {{ categorie.libelle_categorie }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="edit-game-side">
+                <div class="edit-game-field">
+                    <label for="resume" class="edit-game-label">Description du jeu :</label>
+                    <textarea id="resume" name="resume" class="edit-game-textarea" required>{{ game.resume }}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="edit-game-actions">
+            <button type="submit" class="edit-game-button edit-game-button-save">Enregistrer les modifications</button>
+            <a href="/admin/games" class="edit-game-button edit-game-button-cancel">Annuler</a>
+        </div>
+    </form>
+
+    <!-- Zone de danger séparée du formulaire d'édition -->
+    
+
+</div>
+
+<style>
+.edit-game-container {
+    width: 80vw;
+    margin:  auto;
+    padding: 20px;
+}
+
+.edit-game-title {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.edit-game-form {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+}
+
+.edit-game-layout {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.edit-game-main {
+    flex: 1;
+}
+
+.edit-game-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-game-field {
+    margin-bottom: 20px;
+}
+
+.edit-game-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.edit-game-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.edit-game-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.edit-game-actions {
+    margin-top: -30px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.edit-game-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.edit-game-button-save {
+    background-color: #007bff;
+    color: white;
+}
+
+.edit-game-button-save:hover {
+    background-color: #0056b3;
+}
+
+.edit-game-button-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.edit-game-button-cancel:hover {
+    background-color: #5a6268;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.edit-game-danger-zone {
+    padding: 10px;
+    border: 2px solid #dc3545;
+    border-radius: 8px;
+    background-color: #f8d7da;
+}
+
+.danger-zone-title {
+    color: #dc3545;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.danger-zone-text {
+    color: #721c24;
+    margin-bottom: 15px;
+}
+
+.edit-game-button-delete {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-game-button-delete:hover {
+    background-color: #c82333;
+}
+
+</style>
+
+<script>
+function confirmDelete() {
+    return confirm('Êtes-vous sûr de vouloir supprimer ce jeu ? Cette action est irréversible.');
+}
+</script>
+{% endblock %}

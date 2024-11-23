@@ -1,0 +1,129 @@
+{% extends "/visiteur/layout_user.twig" %}
+
+{% block content %}
+<main class="content-jeu" id="content">
+    <div class="detail-jeu">
+        <div class="banniere-jeu" style="background-image: url('/img/{{ game.image_banniere }}');">
+            <div class="banniere-text">
+                <h1>{{ game.nom_jeu }}</h1>
+                <h3>{{ game.resume | truncate(138) | raw }}</h3>
+            </div>
+            <div class="banniere-btn">
+                <button class="btn-test" id="btn-test1">
+                    {% if game.prix_final is defined and game.prix_final != game.prix %}
+                        <span class="original-price">{{ game.prix }}€</span>
+                        <span class="discounted-price">{{ game.prix_final }}€</span>
+                        <span class="discount-badge">-{{ game.reduction }}%</span>
+                    {% else %}
+                        Acheter {{ game.prix }}€
+                    {% endif %}
+                </button>
+                <form method="post" action="/panier">
+                <input type="hidden" name="id_jeu" value="{{ game.id_jeu }}"/>
+                <button type="submit" class="btn-test" id="btn-test2">Ajouter au panier</button>
+                </form>
+                <button class="btn-test" id="btn-test3">
+                    <svg width="40" height="40" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.98 39.9L11.34 25.2L0 15.12L15.12 13.86L21 0L26.88 13.86L42 15.12L35.28 21H33.6C32.13 21 30.66 21.21 29.19 21.84L33.81 17.85L24.57 17.01L21 8.61L17.43 17.01L8.19 17.85L15.12 23.94L13.02 32.97L21 28.14L22.05 28.77C21.63 29.82 21.21 31.08 21.21 32.13L7.98 39.9ZM31.5 25.2V31.5H25.2V35.7H31.5V42H35.7V35.7H42V31.5H35.7V25.2H31.5Z" fill="white"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        
+        <div class="mainInfo-jeu">
+            <div class="resume-jeu">
+                <h5>A propos</h5>
+                <div class="aboutUp">
+                    <div>
+                        <p class="aboutP-top">Editeur</p>
+                        <p class="aboutP-bot">{{ game.nom_societe }}</p>
+                    </div>
+
+                    <div>
+                        <p class="aboutP-top">Date de sortie</p>
+                        <p class="aboutP-bot">{{ game.date_sortie }}</p>
+                    </div>
+
+                    <div>
+                        <p class="aboutP-top">Tags</p>
+                        <p class="aboutP-bot">{{ game.libelle_genre }} | {{ game.categories }} | {{ game.types }}</p>
+                    </div>
+                </div>
+
+                <div class="aboutMain">
+                    <p>{{ game.resume | raw }}</p>
+                </div>
+            </div>
+
+            <div class="media-jeu">
+                <div class="slider-container">
+                    <button class="slider-button prev">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="slider-main">
+                        {% for media in medias %}
+                            {% if media.chemin_media matches '/^https?:\\/\\/(www\\.)?(youtube\\.com\\/embed|youtu\\.be|vimeo\\.com)/' %}
+                                <div class="slide {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}">
+                                    <iframe src="{{ media.chemin_media }}" alt="Preview {{ loop.index }}" allow="autoplay" muted frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            {% elseif media.chemin_media ends with '.jpg' or media.chemin_media ends with '.webp' %}
+                                <div class="slide {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}">
+                                    <img src="/img/{{ media.chemin_media }}" alt="Image {{ loop.index }}">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <button class="slider-button next">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18L15 12L9 6" stroke="white" stroke-width="2"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="slider-preview">
+                    {% for media in medias %}
+                        <div class="preview-item {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}">
+                            {% if media.chemin_media ends with '.jpg' or 'png'  or 'webp' %}
+                                <img src="/img/{{ media.chemin_media }}" alt="Preview {{ loop.index }}">
+                            {% elseif media.chemin_media matches '/^https?:\\/\\/(www\\.)?youtube\\.com|youtu\\.be/' %}
+                                {% set video_id = media.chemin_media|replace({'https://www.youtube.com/watch?v=': '', 'https://youtu.be/': ''}) %}
+                                <img src="https://img.youtube.com/vi/{{ video_id }}/mqdefault.jpg" alt="Preview {{ loop.index }}">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.discounted-price {
+    color: #e63946;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.discount-badge {
+    background-color: #e63946;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+</style>
+{% endblock %}
