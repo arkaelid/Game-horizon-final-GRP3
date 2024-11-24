@@ -1,5 +1,5 @@
 {% extends "/visiteur/layout_user.twig" %}
-
+ 
 {% block content %}
 <main class="content" id="content">
     <h2 class="commande-title">Passer la commande</h2>
@@ -11,15 +11,15 @@
                     <div class="game-title">
                         <h3>{{ game.nom_jeu }}</h3>
                     </div>
-                    
+                   
                     <div class="game-tags">
                         <p>Tags: {{ game.categories }} | {{ game.libelle_genre }}</p>
                     </div>
-                    
+                   
                     <div class="game-date">
                         <p> Date de sortie: {{ game.date_sortie }}</p>
                     </div>
-                    
+                   
                     <div class="game-price">
                         {% if game.reduction %}
                             <p>
@@ -35,41 +35,75 @@
         {% endfor %}
         <hr>
     </div>
-
+ 
     <div class="infos-commande">
-        <p class="label-total">Prix total de la commande :</p>
-        <p class="game-total"> {{ total }} €</p>
+        <div class="total-section">
+            <p class="label-total">Prix total de la commande :</p>
+            <p class="game-total"> {{ total }} €</p>
+        </div>
+       
         <form method="post" action="/commande">
-            <div class="moyenPaiement">
-                <select name="choixPaiement" id="choix-paiement">
-                    <option value="">Choisissez un moyen de paiment</option>
-                    <option value="Cb">Carte Bancaire</option>
-                    <option value="Paypal">Paypal</option>
-                    <option value="Visa">Visa</option>
-                    <option value="MasterCard">MasterCard</option>
-                </select>
+            <div class="actions-row">
+                <div class="moyenPaiement">
+                    <select name="choixPaiement" id="choix-paiement" class="btn-test">
+                        <option value="">Choisissez un moyen de paiment</option>
+                        <option value="Cb">Carte Bancaire</option>
+                        <option value="Paypal">Paypal</option>
+                        <option value="Visa">Visa</option>
+                        <option value="MasterCard">MasterCard</option>
+                    </select>
+                    <div id="cb-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="nom">Nom et Prénom :</label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="numero-carte">Numéro de carte :</label>
+                            <input type="text" id="numero-carte" name="numero-carte" pattern=".{10,}" title="10 chiffres minimum" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="crypto">Code crypto :</label>
+                            <input type="text" id="crypto" name="crypto" pattern="\d{3}" title="3 chiffres requis" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-test" id="btn-validCommande">Valider la commande</button>
+                <a href="/panier" class="btn-test" id="btn-retourPanier">Retour au panier</a>
             </div>
-            <button type="submit" class="btn-test" id="btn-validCommande"> Valider la commande </button>
         </form>
-        <a href="/panier" class="btn-test" id="btn-retourPanier">Retour au panier</a>
     </div>
 </main>
 {% endblock %}
-
+ 
 {% block stylesheets %}
 <style>
+.content {
+    height: 100vh;
+}
 .original-price {
     text-decoration: line-through;
     color: #999;
     font-size: 0.9em;
 }
-
+.total-section {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
 .discounted-price {
     color: #e63946;
     font-weight: bold;
     margin-left: 5px;
 }
-
+.cb-form {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+}
 .discount-badge {
     background-color: #e63946;
     color: white;
@@ -78,5 +112,67 @@
     font-size: 0.8em;
     margin-left: 5px;
 }
+ 
+.form-group {
+    margin: 10px 0;
+}
+ 
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+ 
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+ 
+.moyenPaiement {
+    position: relative;
+}
+ 
+#choix-paiement {
+    margin: 0;
+    height: 100%;
+}
+ 
+#cb-form {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+ 
+.actions-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+ 
+form {
+    width: 100%;
+}
 </style>
+ 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('choix-paiement').addEventListener('change', function() {
+        const cbForm = document.getElementById('cb-form');
+        console.log('Option sélectionnée:', this.value);
+        if (this.value === 'Cb') {
+            cbForm.style.display = 'block';
+        } else {
+            cbForm.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}
